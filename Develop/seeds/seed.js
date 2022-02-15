@@ -10,7 +10,6 @@ const seedDatabase = async () => {
 
   const users = await User.bulkCreate(userData, {
     individualHooks: true,
-    returning: true,
   });
 
   for (const blog of blogData) {

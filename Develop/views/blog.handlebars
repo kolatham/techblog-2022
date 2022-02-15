@@ -1,6 +1,6 @@
 <div class="text-left">
   <h2 class="title">{{title}}</h2>
-  <h6>Created by {{user.name}} on {{format_date date_created}}</h6>
+  <h6>Created by {{user.name}} on {{format_date createdAt}}</h6>
   <p>{{blog_text}}</p>
 
   {{#if comments.length}}
@@ -10,7 +10,7 @@
       {{#each comments as |comment|}}
       <div class="row mb-2">
         <div class="col-md-8">
-          <p class="comment">{{comment.comment_text}}</p>
+          <p class="comment">{{comment.comment_type}}</p>
         </div>
       </div>
       {{/each}}
