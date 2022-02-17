@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
       res.render('homepage', { 
         blogs, 
-        loggedIn: req.session.loggedIn 
+        logged_in: req.session.logged_in 
       });
     } catch (err) {
       res.status(500).json(err);
@@ -52,7 +52,7 @@ router.get('/blog/:id', async (req, res) => {
     res.render('blog', {
         ...blog,
         comments,
-        loggedIn: req.session.loggedIn
+        logged_in: req.session.logged_in
       });
     } catch (err) {
       res.status(500).json(err);
@@ -62,18 +62,31 @@ router.get('/blog/:id', async (req, res) => {
 
   router.get('/dashboard', withAuth, async (req, res) => {
     try {
-    
-      const userData = await User.findByPk(req.session.user_id, {
-        attributes: { exclude: ['password'] },
-        include: [{ model: Blog }],
+    console.log(req.session.user_id)
+      const userData = await Blog.findAll(
+        {where:{user_id: req.session.user_id,}, 
+        // attributes: { exclude: ['password'] },
+        include: [Comment],
       });
-  
-      const user = userData.get({ plain: true });
+      console.log(userData)
+      if (userData.length!== 0){
+        const blogs = userData.map((blog) => {return blog.dataValues});
+        console.log(blogs);
   
       res.render('dashboard', {
-        ...user,
-        loggedIn: true
+        user: req.session.user,
+        logged_in: true,
+        blogs: blogs
       });
+      }else{
+        console.log(req.session)
+        res.render('dashboard', {
+          user: req.session,
+          logged_in: true,
+          blogs: []
+
+        })
+      }
     } catch (err) {
       res.status(500).json(err);
     }
@@ -81,7 +94,7 @@ router.get('/blog/:id', async (req, res) => {
 
   router.get('/login', (req, res) => {
     
-    if (req.session.loggedIn) {
+    if (req.session.logged_in) {
       res.redirect('/dashboard');
       return;
     }
