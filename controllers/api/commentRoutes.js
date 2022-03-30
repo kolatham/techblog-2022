@@ -10,7 +10,7 @@ router.post('/', withAuth, async (req, res) => {
       blog_id: req.body.blog.id,
     });
 
-    res.status(200).json(newProject);
+    res.status(200).json(newComment);
   } catch (err) {
     res.status(400).json(err);
   }
